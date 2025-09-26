@@ -1,0 +1,436 @@
+# README — definicje cech i przykłady
+
+**Użyty przykładowy order book (4 bidy, 3 aski):**  
+<span style="color:red;font-weight:bold">ask</span>, 111,000, 2.00<br/><span style="color:red;font-weight:bold">ask</span>, 111,050, 3.50<br/><span style="color:red;font-weight:bold">ask</span>, 111,100, 5.00<br/><span style='color:#888'>------</span><br/><span style="color:green;font-weight:bold">bid</span>, 110,000, 1.00<br/><span style="color:green;font-weight:bold">bid</span>, 109,950, 2.50<br/><span style="color:green;font-weight:bold">bid</span>, 109,900, 4.00<br/><span style="color:green;font-weight:bold">bid</span>, 109,850, 3.00
+
+**Dodatkowe założenia do przykładów:**
+- **Poprzedni snapshot** (do cech z deltami): bestAsk=111 050 @ 2.50, bestBid=109 950 @ 1.50.
+- **Ostatnia cena transakcyjna**: 111000.00 (przyjmujemy wykonanie po najlepszej ofercie sprzedaży).
+- **Najstarsza cena w oknie**: $P_{oldest}(w)=\text{midPrice}-0.5\cdot w$, gdzie $w\in\{1,3,5,10,15,30,60\}$ s.
+- **Syntetyczne statystyki transakcji** (liczby i wolumeny rosną wraz z oknem) zostały zdefiniowane spójnie dla wszystkich okien.
+
+**Wartości pochodne z księgi (dla wygody):**
+- bestBidPrice = 110000.00, bestBidQty = 1.00
+- bestAskPrice = 111000.00, bestAskQty = 2.00
+- midPrice = 110500.00000000
+- microPrice = 110333.33333333
+- ΔbestBidQty = -0.50, ΔbestAskQty = -0.50
+- CKS: dQbid_net = +1.00, dQask_net = +2.00
+
+
+## microPriceLogRatio
+- **Wzór:** $\log\left(\frac{\text{microPrice}}{\text{midPrice}}\right)$
+- **Przykład (na danych z góry):** -0.00150943
+
+## bestOrderFlowFisherImbalance
+- **Wzór:** $\operatorname{atanh}\!\left(\frac{\Delta Q_{\text{bid}} - \Delta Q_{\text{ask}}}{|\Delta Q_{\text{bid}}| + |\Delta Q_{\text{ask}}|}\right)$
+- **Przykład (na danych z góry):** 0.00000000
+
+## bestOrderFlowCKSFisherImbalance
+- **Wzór:** $\operatorname{atanh}\!\left(\frac{dQ^{\text{CKS}}_{\text{bid}} - dQ^{\text{CKS}}_{\text{ask}}}{|dQ^{\text{CKS}}_{\text{bid}}| + |dQ^{\text{CKS}}_{\text{ask}}|}\right)$
+- **Przykład (na danych z góry):** -0.34657359
+
+## orderFlowFisherImbalance
+- **Wzór:** $\operatorname{atanh}\!\left(\frac{\Delta \sum Q_{\text{bid}} - \Delta \sum Q_{\text{ask}}}{|\Delta \sum Q_{\text{bid}}| + |\Delta \sum Q_{\text{ask}}|}\right)$
+- **Przykład (na danych z góry):** 0.00000000
+
+## bestVolumeLogRatio
+- **Wzór:** $\log\left(\frac{Q_{\text{bestBid}}}{Q_{\text{bestAsk}}}\right)$
+- **Przykład (na danych z góry):** -0.69314718
+
+## bestVolumeSignedLogRatioXVolume
+- **Wzór:** $\log\left(\frac{Q_{\text{bestBid}}}{Q_{\text{bestAsk}}}\right)\cdot(Q_{\text{bestBid}}+Q_{\text{bestAsk}})$
+- **Przykład (na danych z góry):** -2.07944154
+
+## bestTwoVolumeLogRatio
+- **Wzór:** $\log\left(\frac{\sum_{i=1}^{N} Q^{\text{bid}}_i}{\sum_{i=1}^{N} Q^{\text{ask}}_i}\right)$ (N=2)
+- **Przykład (na danych z góry):** -0.45198512
+- **Uwaga:** Niewystarczająca głębokość księgi dla N > liczba dostępnych poziomów.
+
+## bestThreeVolumeLogRatio
+- **Wzór:** $\log\left(\frac{\sum_{i=1}^{N} Q^{\text{bid}}_i}{\sum_{i=1}^{N} Q^{\text{ask}}_i}\right)$ (N=3)
+- **Przykład (na danych z góry):** -0.33647224
+- **Uwaga:** Niewystarczająca głębokość księgi dla N > liczba dostępnych poziomów.
+
+## bestFiveVolumeLogRatioXVolume
+- **Wzór:** $\log\left(\frac{\sum_{i=1}^{N} Q^{\text{bid}}_i}{\sum_{i=1}^{N} Q^{\text{ask}}_i}\right)\cdot \left(\sum_{i=1}^{N} Q^{\text{bid}}_i+\sum_{i=1}^{N} Q^{\text{ask}}_i\right)$ (N=5)
+- **Przykład (na danych z góry):** 0.00000000
+- **Uwaga:** Niewystarczająca głębokość księgi dla N > liczba dostępnych poziomów.
+
+## bestFiftyVolumeLogRatioXVolume
+- **Wzór:** $\log\left(\frac{\sum_{i=1}^{N} Q^{\text{bid}}_i}{\sum_{i=1}^{N} Q^{\text{ask}}_i}\right)\cdot \left(\sum_{i=1}^{N} Q^{\text{bid}}_i+\sum_{i=1}^{N} Q^{\text{ask}}_i\right)$ (N=50)
+- **Przykład (na danych z góry):** 0.00000000
+- **Uwaga:** Niewystarczająca głębokość księgi dla N > liczba dostępnych poziomów.
+
+## bestHundredVolumeLogRatioXVolume
+- **Wzór:** $\log\left(\frac{\sum_{i=1}^{N} Q^{\text{bid}}_i}{\sum_{i=1}^{N} Q^{\text{ask}}_i}\right)\cdot \left(\sum_{i=1}^{N} Q^{\text{bid}}_i+\sum_{i=1}^{N} Q^{\text{ask}}_i\right)$ (N=100)
+- **Przykład (na danych z góry):** 0.00000000
+- **Uwaga:** Niewystarczająca głębokość księgi dla N > liczba dostępnych poziomów.
+
+## bestFiveHundredVolumeLogRatioXVolume
+- **Wzór:** $\log\left(\frac{\sum_{i=1}^{N} Q^{\text{bid}}_i}{\sum_{i=1}^{N} Q^{\text{ask}}_i}\right)\cdot \left(\sum_{i=1}^{N} Q^{\text{bid}}_i+\sum_{i=1}^{N} Q^{\text{ask}}_i\right)$ (N=500)
+- **Przykład (na danych z góry):** 0.00000000
+- **Uwaga:** Niewystarczająca głębokość księgi dla N > liczba dostępnych poziomów.
+
+## bestThousandVolumeLogRatioXVolume
+- **Wzór:** $\log\left(\frac{\sum_{i=1}^{N} Q^{\text{bid}}_i}{\sum_{i=1}^{N} Q^{\text{ask}}_i}\right)\cdot \left(\sum_{i=1}^{N} Q^{\text{bid}}_i+\sum_{i=1}^{N} Q^{\text{ask}}_i\right)$ (N=1000)
+- **Przykład (na danych z góry):** 0.00000000
+- **Uwaga:** Niewystarczająca głębokość księgi dla N > liczba dostępnych poziomów.
+
+## volumeLogRatio
+- **Wzór:** $\log\left(\frac{\sum Q_{\text{bid}}}{\sum Q_{\text{ask}}}\right)$
+- **Przykład (na danych z góry):** 0.00000000
+
+## volumeLogRatioXVolume
+- **Wzór:** $\log\left(\frac{\sum Q_{\text{bid}}}{\sum Q_{\text{ask}}}\right)\cdot(\sum Q_{\text{bid}}+\sum Q_{\text{ask}})$
+- **Przykład (na danych z góry):** 0.00000000
+
+## queueLogRatio
+- **Wzór:** $\log\left(\frac{\#\text{bid levels}}{\#\text{ask levels}}\right)$
+- **Przykład (na danych z góry):** 0.28768207
+
+## queueLogRatioXVolume
+- **Wzór:** $\log\left(\frac{\#\text{bid levels}}{\#\text{ask levels}}\right)\cdot(\sum Q_{\text{bid}}+\sum Q_{\text{ask}})$
+- **Przykład (na danych z góry):** 6.04132352
+
+## isAggressorAsk
+- **Wzór:** Wartość logiczna: true jeśli TradeEntry.isBuyerMarketMaker == true.
+- **Przykład (na danych z góry):** true
+- **Uwaga:** Zależne od właściwości transakcji, nie księgi zleceń.
+
+## vwapLogRatio
+- **Wzór:** $\log\left(\frac{\text{midPrice}}{\text{VWAP}_{\text{book}}}\right)$
+- **Przykład (na danych z góry):** 0.00012929
+
+## simplifiedSlopeLogRatio
+- **Wzór:** Patrz sekcja Slope (K=5): wymaga piątych poziomów po obu stronach.
+- **Przykład (na danych z góry):** **N/A**
+- **Uwaga:** Brak piątego poziomu (mamy 3 ask, 4 bid), dlatego liczbowy przykład jest N/A.
+
+## bgcSlopeLogRatio
+- **Wzór:** Patrz sekcja Slope (K=5): wymaga piątych poziomów po obu stronach.
+- **Przykład (na danych z góry):** **N/A**
+- **Uwaga:** Brak piątego poziomu (mamy 3 ask, 4 bid), dlatego liczbowy przykład jest N/A.
+
+## differenceDepthCount1Seconds
+- **Wzór:** $N_{\text{DD,bid}}(w) + N_{\text{DD,ask}}(w)$
+- **Przykład (na danych z góry):** 2
+
+## differenceDepthCount3Seconds
+- **Wzór:** $N_{\text{DD,bid}}(w) + N_{\text{DD,ask}}(w)$
+- **Przykład (na danych z góry):** 2
+
+## differenceDepthCount5Seconds
+- **Wzór:** $N_{\text{DD,bid}}(w) + N_{\text{DD,ask}}(w)$
+- **Przykład (na danych z góry):** 2
+
+## differenceDepthCount10Seconds
+- **Wzór:** $N_{\text{DD,bid}}(w) + N_{\text{DD,ask}}(w)$
+- **Przykład (na danych z góry):** 4
+
+## differenceDepthCount15Seconds
+- **Wzór:** $N_{\text{DD,bid}}(w) + N_{\text{DD,ask}}(w)$
+- **Przykład (na danych z góry):** 4
+
+## differenceDepthCount30Seconds
+- **Wzór:** $N_{\text{DD,bid}}(w) + N_{\text{DD,ask}}(w)$
+- **Przykład (na danych z góry):** 8
+
+## differenceDepthCount60Seconds
+- **Wzór:** $N_{\text{DD,bid}}(w) + N_{\text{DD,ask}}(w)$
+- **Przykład (na danych z góry):** 15
+
+## tradeCount1Seconds
+- **Wzór:** $N_{\text{buys}}(w) + N_{\text{sells}}(w)$
+- **Przykład (na danych z góry):** 5
+
+## tradeCount3Seconds
+- **Wzór:** $N_{\text{buys}}(w) + N_{\text{sells}}(w)$
+- **Przykład (na danych z góry):** 5
+
+## tradeCount5Seconds
+- **Wzór:** $N_{\text{buys}}(w) + N_{\text{sells}}(w)$
+- **Przykład (na danych z góry):** 6
+
+## tradeCount10Seconds
+- **Wzór:** $N_{\text{buys}}(w) + N_{\text{sells}}(w)$
+- **Przykład (na danych z góry):** 8
+
+## tradeCount15Seconds
+- **Wzór:** $N_{\text{buys}}(w) + N_{\text{sells}}(w)$
+- **Przykład (na danych z góry):** 9
+
+## tradeCount30Seconds
+- **Wzór:** $N_{\text{buys}}(w) + N_{\text{sells}}(w)$
+- **Przykład (na danych z góry):** 14
+
+## tradeCount60Seconds
+- **Wzór:** $N_{\text{buys}}(w) + N_{\text{sells}}(w)$
+- **Przykład (na danych z góry):** 23
+
+## differenceDepthCountLogRatio1Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{DD,bid}}(w)}{N_{\text{DD,ask}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.00000000
+
+## differenceDepthCountLogRatio3Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{DD,bid}}(w)}{N_{\text{DD,ask}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.00000000
+
+## differenceDepthCountLogRatio5Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{DD,bid}}(w)}{N_{\text{DD,ask}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.00000000
+
+## differenceDepthCountLogRatio10Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{DD,bid}}(w)}{N_{\text{DD,ask}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.00000000
+
+## differenceDepthCountLogRatio15Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{DD,bid}}(w)}{N_{\text{DD,ask}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.00000000
+
+## differenceDepthCountLogRatio30Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{DD,bid}}(w)}{N_{\text{DD,ask}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.00000000
+
+## differenceDepthCountLogRatio60Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{DD,bid}}(w)}{N_{\text{DD,ask}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.13353139
+
+## differenceDepthCountLogRatioXEventCount1Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{DD,bid}}(w)}{N_{\text{DD,ask}}(w)}\right)\cdot (N_{\text{DD,bid}}(w)+N_{\text{DD,ask}}(w))$
+- **Przykład (na danych z góry):** 0.00000000
+
+## differenceDepthCountLogRatioXEventCount3Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{DD,bid}}(w)}{N_{\text{DD,ask}}(w)}\right)\cdot (N_{\text{DD,bid}}(w)+N_{\text{DD,ask}}(w))$
+- **Przykład (na danych z góry):** 0.00000000
+
+## differenceDepthCountLogRatioXEventCount5Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{DD,bid}}(w)}{N_{\text{DD,ask}}(w)}\right)\cdot (N_{\text{DD,bid}}(w)+N_{\text{DD,ask}}(w))$
+- **Przykład (na danych z góry):** 0.00000000
+
+## differenceDepthCountLogRatioXEventCount10Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{DD,bid}}(w)}{N_{\text{DD,ask}}(w)}\right)\cdot (N_{\text{DD,bid}}(w)+N_{\text{DD,ask}}(w))$
+- **Przykład (na danych z góry):** 0.00000000
+
+## differenceDepthCountLogRatioXEventCount15Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{DD,bid}}(w)}{N_{\text{DD,ask}}(w)}\right)\cdot (N_{\text{DD,bid}}(w)+N_{\text{DD,ask}}(w))$
+- **Przykład (na danych z góry):** 0.00000000
+
+## differenceDepthCountLogRatioXEventCount30Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{DD,bid}}(w)}{N_{\text{DD,ask}}(w)}\right)\cdot (N_{\text{DD,bid}}(w)+N_{\text{DD,ask}}(w))$
+- **Przykład (na danych z góry):** 0.00000000
+
+## differenceDepthCountLogRatioXEventCount60Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{DD,bid}}(w)}{N_{\text{DD,ask}}(w)}\right)\cdot (N_{\text{DD,bid}}(w)+N_{\text{DD,ask}}(w))$
+- **Przykład (na danych z góry):** 2.00297089
+
+## tradeCountLogRatio1Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{buys}}(w)}{N_{\text{sells}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.40546511
+
+## tradeCountLogRatio3Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{buys}}(w)}{N_{\text{sells}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.40546511
+
+## tradeCountLogRatio5Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{buys}}(w)}{N_{\text{sells}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.69314718
+
+## tradeCountLogRatio10Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{buys}}(w)}{N_{\text{sells}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.51082562
+
+## tradeCountLogRatio15Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{buys}}(w)}{N_{\text{sells}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.69314718
+
+## tradeCountLogRatio30Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{buys}}(w)}{N_{\text{sells}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.58778666
+
+## tradeCountLogRatio60Seconds
+- **Wzór:** $\log\left(\frac{N_{\text{buys}}(w)}{N_{\text{sells}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.62860866
+
+## tradeVolumeLogRatio1Seconds
+- **Wzór:** $\log\left(\frac{V_{\text{buys}}(w)}{V_{\text{sells}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.28768207
+
+## tradeVolumeLogRatio3Seconds
+- **Wzór:** $\log\left(\frac{V_{\text{buys}}(w)}{V_{\text{sells}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.28768207
+
+## tradeVolumeLogRatio5Seconds
+- **Wzór:** $\log\left(\frac{V_{\text{buys}}(w)}{V_{\text{sells}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.28768207
+
+## tradeVolumeLogRatio10Seconds
+- **Wzór:** $\log\left(\frac{V_{\text{buys}}(w)}{V_{\text{sells}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.28768207
+
+## tradeVolumeLogRatio15Seconds
+- **Wzór:** $\log\left(\frac{V_{\text{buys}}(w)}{V_{\text{sells}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.28768207
+
+## tradeVolumeLogRatio30Seconds
+- **Wzór:** $\log\left(\frac{V_{\text{buys}}(w)}{V_{\text{sells}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.28768207
+
+## tradeVolumeLogRatio60Seconds
+- **Wzór:** $\log\left(\frac{V_{\text{buys}}(w)}{V_{\text{sells}}(w)}\right)$
+- **Przykład (na danych z góry):** 0.28768207
+
+## avgTradeSizeLogRatio1Seconds
+- **Wzór:** $\log\left(\frac{\overline{s}_{\text{buy}}(w)}{\overline{s}_{\text{sell}}(w)}\right)$, gdzie $\overline{s} = V/N$
+- **Przykład (na danych z góry):** -0.11778304
+
+## avgTradeSizeLogRatio3Seconds
+- **Wzór:** $\log\left(\frac{\overline{s}_{\text{buy}}(w)}{\overline{s}_{\text{sell}}(w)}\right)$, gdzie $\overline{s} = V/N$
+- **Przykład (na danych z góry):** -0.11778304
+
+## avgTradeSizeLogRatio5Seconds
+- **Wzór:** $\log\left(\frac{\overline{s}_{\text{buy}}(w)}{\overline{s}_{\text{sell}}(w)}\right)$, gdzie $\overline{s} = V/N$
+- **Przykład (na danych z góry):** -0.40546511
+
+## avgTradeSizeLogRatio10Seconds
+- **Wzór:** $\log\left(\frac{\overline{s}_{\text{buy}}(w)}{\overline{s}_{\text{sell}}(w)}\right)$, gdzie $\overline{s} = V/N$
+- **Przykład (na danych z góry):** -0.22314355
+
+## avgTradeSizeLogRatio15Seconds
+- **Wzór:** $\log\left(\frac{\overline{s}_{\text{buy}}(w)}{\overline{s}_{\text{sell}}(w)}\right)$, gdzie $\overline{s} = V/N$
+- **Przykład (na danych z góry):** -0.40546511
+
+## avgTradeSizeLogRatio30Seconds
+- **Wzór:** $\log\left(\frac{\overline{s}_{\text{buy}}(w)}{\overline{s}_{\text{sell}}(w)}\right)$, gdzie $\overline{s} = V/N$
+- **Przykład (na danych z góry):** -0.30010459
+
+## avgTradeSizeLogRatio60Seconds
+- **Wzór:** $\log\left(\frac{\overline{s}_{\text{buy}}(w)}{\overline{s}_{\text{sell}}(w)}\right)$, gdzie $\overline{s} = V/N$
+- **Przykład (na danych z góry):** -0.34092659
+
+## biggestSingleBuyTradeVolume1Seconds
+- **Wzór:** $\max\{ \text{wielkość transakcji kupna w } w\}$
+- **Przykład (na danych z góry):** 0.31000000
+
+## biggestSingleBuyTradeVolume3Seconds
+- **Wzór:** $\max\{ \text{wielkość transakcji kupna w } w\}$
+- **Przykład (na danych z góry):** 0.32000000
+
+## biggestSingleBuyTradeVolume5Seconds
+- **Wzór:** $\max\{ \text{wielkość transakcji kupna w } w\}$
+- **Przykład (na danych z góry):** 0.33000000
+
+## biggestSingleBuyTradeVolume10Seconds
+- **Wzór:** $\max\{ \text{wielkość transakcji kupna w } w\}$
+- **Przykład (na danych z góry):** 0.35000000
+
+## biggestSingleBuyTradeVolume15Seconds
+- **Wzór:** $\max\{ \text{wielkość transakcji kupna w } w\}$
+- **Przykład (na danych z góry):** 0.38000000
+
+## biggestSingleBuyTradeVolume30Seconds
+- **Wzór:** $\max\{ \text{wielkość transakcji kupna w } w\}$
+- **Przykład (na danych z góry):** 0.45000000
+
+## biggestSingleBuyTradeVolume60Seconds
+- **Wzór:** $\max\{ \text{wielkość transakcji kupna w } w\}$
+- **Przykład (na danych z góry):** 0.60000000
+
+## biggestSingleSellTradeVolume1Seconds
+- **Wzór:** $\max\{ \text{wielkość transakcji sprzedaży w } w\}$
+- **Przykład (na danych z góry):** 0.25000000
+
+## biggestSingleSellTradeVolume3Seconds
+- **Wzór:** $\max\{ \text{wielkość transakcji sprzedaży w } w\}$
+- **Przykład (na danych z góry):** 0.26000000
+
+## biggestSingleSellTradeVolume5Seconds
+- **Wzór:** $\max\{ \text{wielkość transakcji sprzedaży w } w\}$
+- **Przykład (na danych z góry):** 0.27000000
+
+## biggestSingleSellTradeVolume10Seconds
+- **Wzór:** $\max\{ \text{wielkość transakcji sprzedaży w } w\}$
+- **Przykład (na danych z góry):** 0.29000000
+
+## biggestSingleSellTradeVolume15Seconds
+- **Wzór:** $\max\{ \text{wielkość transakcji sprzedaży w } w\}$
+- **Przykład (na danych z góry):** 0.31000000
+
+## biggestSingleSellTradeVolume30Seconds
+- **Wzór:** $\max\{ \text{wielkość transakcji sprzedaży w } w\}$
+- **Przykład (na danych z góry):** 0.37000000
+
+## biggestSingleSellTradeVolume60Seconds
+- **Wzór:** $\max\{ \text{wielkość transakcji sprzedaży w } w\}$
+- **Przykład (na danych z góry):** 0.49000000
+
+## priceDifference1Seconds
+- **Wzór:** $P_{\text{last}} - P_{\text{oldest}(w)}$
+- **Przykład (na danych z góry):** 500.50000000
+
+## priceDifference3Seconds
+- **Wzór:** $P_{\text{last}} - P_{\text{oldest}(w)}$
+- **Przykład (na danych z góry):** 501.50000000
+
+## priceDifference5Seconds
+- **Wzór:** $P_{\text{last}} - P_{\text{oldest}(w)}$
+- **Przykład (na danych z góry):** 502.50000000
+
+## priceDifference10Seconds
+- **Wzór:** $P_{\text{last}} - P_{\text{oldest}(w)}$
+- **Przykład (na danych z góry):** 505.00000000
+
+## priceDifference15Seconds
+- **Wzór:** $P_{\text{last}} - P_{\text{oldest}(w)}$
+- **Przykład (na danych z góry):** 507.50000000
+
+## priceDifference30Seconds
+- **Wzór:** $P_{\text{last}} - P_{\text{oldest}(w)}$
+- **Przykład (na danych z góry):** 515.00000000
+
+## priceDifference60Seconds
+- **Wzór:** $P_{\text{last}} - P_{\text{oldest}(w)}$
+- **Przykład (na danych z góry):** 530.00000000
+
+## logReturnRatio1Seconds
+- **Wzór:** $\log\left(\frac{P_{\text{last}}}{P_{\text{oldest}(w)}}\right)$
+- **Przykład (na danych z góry):** 0.00451921
+
+## logReturnRatio3Seconds
+- **Wzór:** $\log\left(\frac{P_{\text{last}}}{P_{\text{oldest}(w)}}\right)$
+- **Przykład (na danych z góry):** 0.00452826
+
+## logReturnRatio5Seconds
+- **Wzór:** $\log\left(\frac{P_{\text{last}}}{P_{\text{oldest}(w)}}\right)$
+- **Przykład (na danych z góry):** 0.00453731
+
+## logReturnRatio10Seconds
+- **Wzór:** $\log\left(\frac{P_{\text{last}}}{P_{\text{oldest}(w)}}\right)$
+- **Przykład (na danych z góry):** 0.00455993
+
+## logReturnRatio15Seconds
+- **Wzór:** $\log\left(\frac{P_{\text{last}}}{P_{\text{oldest}(w)}}\right)$
+- **Przykład (na danych z góry):** 0.00458256
+
+## logReturnRatio30Seconds
+- **Wzór:** $\log\left(\frac{P_{\text{last}}}{P_{\text{oldest}(w)}}\right)$
+- **Przykład (na danych z góry):** 0.00465044
+
+## logReturnRatio60Seconds
+- **Wzór:** $\log\left(\frac{P_{\text{last}}}{P_{\text{oldest}(w)}}\right)$
+- **Przykład (na danych z góry):** 0.00478621
+
+
+## Aneks — użyte syntetyczne statystyki
+
+| okno [s] | buys | sells | buy_vol | sell_vol | big_buy | big_sell | P_oldest | P_last | ΔP |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 3 | 2 | 0.84 | 0.63 | 0.31 | 0.25 | 110499.50 | 111000.00 | 500.50 |
+| 3 | 3 | 2 | 0.92 | 0.69 | 0.32 | 0.26 | 110498.50 | 111000.00 | 501.50 |
+| 5 | 4 | 2 | 1.00 | 0.75 | 0.33 | 0.27 | 110497.50 | 111000.00 | 502.50 |
+| 10 | 5 | 3 | 1.20 | 0.90 | 0.35 | 0.29 | 110495.00 | 111000.00 | 505.00 |
+| 15 | 6 | 3 | 1.40 | 1.05 | 0.38 | 0.31 | 110492.50 | 111000.00 | 507.50 |
+| 30 | 9 | 5 | 2.00 | 1.50 | 0.45 | 0.37 | 110485.00 | 111000.00 | 515.00 |
+| 60 | 15 | 8 | 3.20 | 2.40 | 0.60 | 0.49 | 110470.00 | 111000.00 | 530.00 |
+
+Dla DifferenceDepth przyjęto przykładowe liczby zdarzeń po obu stronach w każdym oknie.

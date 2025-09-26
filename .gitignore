@@ -1,0 +1,48 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtualenv
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Jupyter
+.ipynb_checkpoints
+
+# =========================
+# PyCharm / IntelliJ
+# =========================
+.idea/
+*.iml
+
+# =========================
+# OS pliki
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Dane duże (CSV, logi, binarki)
+# =========================
+*.log
+*.csv
+*.tsv
+*.dat
+*.bin
+*.h5
+*.npz
+*.parquet
+*.pkl
